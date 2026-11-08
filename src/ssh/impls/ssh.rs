@@ -1331,6 +1331,10 @@ pub(crate) async fn authenticate_session(
         None => return Ok(AuthResult::Cancelled),
     };
 
+    if handle.authenticate_none(&user).await.unwrap_or(false) {
+        return Ok(AuthResult::Success);
+    }
+
     let _ = events.send(SessionEvent::Status(format!(
         "{} {}@{}:{}",
         t("正在认证", "Authenticating"),
